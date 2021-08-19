@@ -134,6 +134,11 @@ var User = function () {
     return this.Data[propName];
   };
 
+  User.prototype.set = function (update) {
+    //Copy all the values of update and insert into this.Data 
+    Object.assign(this.Data, update);
+  };
+
   return User;
 }();
 
@@ -150,6 +155,17 @@ var User_1 = require("./models/User");
 var user = new User_1.User({
   name: "Elzaan",
   age: 30
+});
+var user1 = new User_1.User({});
+user1.set({
+  name: "Elzaan"
+});
+user.set({
+  name: "Lizaan",
+  age: 99
+});
+user.set({
+  age: 49
 });
 console.log(user.get("name"));
 console.log(user.get("age"));
