@@ -127,16 +127,40 @@ exports.User = void 0;
 
 var User = function () {
   function User(Data) {
-    this.Data = Data;
-  }
+    this.Data = Data; //Store Events
+
+    this.events = {};
+  } //Gets a single piece of info about the user (name, age)
+
 
   User.prototype.get = function (propName) {
     return this.Data[propName];
-  };
+  }; //Changes/updates info about the user
+
 
   User.prototype.set = function (update) {
     //Copy all the values of update and insert into this.Data 
     Object.assign(this.Data, update);
+  }; //Event Listener method -  register an event handler - so other parts of the app know when something changes
+
+
+  User.prototype.on = function (eventName, callback) {
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  }; //Triggers an event to tell other parts of the app something has changed
+
+
+  User.prototype.trigger = function (eventName) {
+    var handlers = this.events[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
   };
 
   return User;
@@ -155,20 +179,20 @@ var User_1 = require("./models/User");
 var user = new User_1.User({
   name: "Elzaan",
   age: 30
+}); // const user1 = new User({});
+// user1.set({name: "Elzaan"});
+// user.set({name: "Lizaan", age: 99});
+// user.set({age: 49});
+// console.log(user.get("name"));
+// console.log(user.get("age"));
+
+user.on("change", function () {
+  console.log("Change # 1");
 });
-var user1 = new User_1.User({});
-user1.set({
-  name: "Elzaan"
+user.on("click", function () {
+  console.log("Change # 2");
 });
-user.set({
-  name: "Lizaan",
-  age: 99
-});
-user.set({
-  age: 49
-});
-console.log(user.get("name"));
-console.log(user.get("age"));
+user.trigger("click");
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
