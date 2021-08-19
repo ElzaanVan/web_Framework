@@ -1,7 +1,8 @@
 interface UserData {
     // Make properties optional by adding?
     name ?: string;
-    age ?: number
+    age ?: number;
+    id?: number;
 }
 
 //Type Alias
