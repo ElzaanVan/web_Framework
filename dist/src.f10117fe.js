@@ -1999,7 +1999,37 @@ var Sync = function () {
 }();
 
 exports.Sync = Sync;
-},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js"}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Attributes = void 0; // Setting up generic constraint
+// Limiting the different type that we pass in as an argument
+// Then we are looking up the given key on the interface T to understand what type of value we are returning
+
+var Attributes = function () {
+  function Attributes(Data) {
+    this.Data = Data;
+  } //Gets a single piece of info about the user (name, age)
+
+
+  Attributes.prototype.get = function (key) {
+    return this.Data[key];
+  }; //Changes/updates info about the user
+
+
+  Attributes.prototype.set = function (update) {
+    //Copy all the values of update and insert into this.Data 
+    Object.assign(this.Data, update);
+  };
+
+  return Attributes;
+}();
+
+exports.Attributes = Attributes;
+},{}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2011,31 +2041,22 @@ var Eventing_1 = require("./Eventing");
 
 var Sync_1 = require("./Sync");
 
+var Attributes_1 = require("./Attributes");
+
 var rootUrl = 'http://localhost:3000/users';
 
 var User = function () {
-  function User(Data) {
-    this.Data = Data;
+  function User(attrs) {
     this.events = new Eventing_1.Eventing();
     this.sync = new Sync_1.Sync(rootUrl);
-  } //Gets a single piece of info about the user (name, age)
-
-
-  User.prototype.get = function (propName) {
-    return this.Data[propName];
-  }; //Changes/updates info about the user
-
-
-  User.prototype.set = function (update) {
-    //Copy all the values of update and insert into this.Data 
-    Object.assign(this.Data, update);
-  };
+    this.attributes = new Attributes_1.Attributes(attrs);
+  }
 
   return User;
 }();
 
 exports.User = User;
-},{"./Eventing":"src/models/Eventing.ts","./Sync":"src/models/Sync.ts"}],"src/index.ts":[function(require,module,exports) {
+},{"./Eventing":"src/models/Eventing.ts","./Sync":"src/models/Sync.ts","./Attributes":"src/models/Attributes.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
