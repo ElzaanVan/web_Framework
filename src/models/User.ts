@@ -52,4 +52,18 @@ export class User {
         
         );
     }
+
+    //Save - check if user has an ID ? PUT request : POST request
+    save(): void {
+        const id = this.get('id');
+
+        if(id){
+        // PUT
+        axios.put(`http://localhost:3000/users/${id}`, this.Data);
+        } else {
+        // POST
+        axios.post('http://localhost:3000/users', this.Data);
+        }
+    }
+
 }

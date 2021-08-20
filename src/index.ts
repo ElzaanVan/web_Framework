@@ -10,8 +10,23 @@ import { User } from "./models/User"
 //Get information about specific user - with ID
 // axios.get('http://localhost:3000/users/3');
 
-const user = new User ({ id: 3 });
-user.fetch();
-setTimeout(() => {
-    console.log(user);
-}, 4000)
+// const user = new User ({ id: 3 });
+// user.fetch();
+
+//Test hack to see if the fetch is working
+// setTimeout(() => {
+//     console.log(user);
+// }, 4000)
+
+
+// Existing User
+const user = new User({ id: 3 });
+
+user.set({ age: 123 });
+user.set({ name: "Loandie" });
+
+user.save();
+
+// New User
+const newUser = new User ({ name:"No Id", age: 30 });
+newUser.save();

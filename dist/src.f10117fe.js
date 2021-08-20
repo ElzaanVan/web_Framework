@@ -1978,6 +1978,19 @@ var User = function () {
     axios_1.default.get("http://localhost:3000/users/" + this.get('id')).then(function (response) {
       _this.set(response.data);
     });
+  }; //Save - check if user has an ID ? PUT request : POST request
+
+
+  User.prototype.save = function () {
+    var id = this.get('id');
+
+    if (id) {
+      // PUT
+      axios_1.default.put("http://localhost:3000/users/" + id, this.Data);
+    } else {
+      // POST
+      axios_1.default.post('http://localhost:3000/users', this.Data);
+    }
   };
 
   return User;
@@ -1998,15 +2011,31 @@ var User_1 = require("./models/User"); //Create a new user using Axios
 // });
 //Get information about specific user - with ID
 // axios.get('http://localhost:3000/users/3');
+// const user = new User ({ id: 3 });
+// user.fetch();
+//Test hack to see if the fetch is working
+// setTimeout(() => {
+//     console.log(user);
+// }, 4000)
+// Existing User
 
 
 var user = new User_1.User({
   id: 3
 });
-user.fetch();
-setTimeout(function () {
-  console.log(user);
-}, 4000);
+user.set({
+  age: 123
+});
+user.set({
+  name: "Loandie"
+});
+user.save(); // New User
+
+var newUser = new User_1.User({
+  name: "No Id",
+  age: 30
+});
+newUser.save();
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
