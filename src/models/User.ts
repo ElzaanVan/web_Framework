@@ -1,3 +1,5 @@
+import axios, { AxiosResponse } from "axios";
+
 interface UserData {
     // Make properties optional by adding?
     name ?: string;
@@ -40,5 +42,14 @@ export class User {
         handlers.forEach(callback => {
             callback();
         });
+    }
+
+    //Fetch - to fetch some data from the server about a particular user .then
+    fetch(): void {
+        axios.get(`http://localhost:3000/users/${this.get('id')}`).then((response: AxiosResponse): void => {
+            this.set(response.data);
+            }
+        
+        );
     }
 }
