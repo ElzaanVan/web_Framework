@@ -20,13 +20,22 @@ import { User } from "./models/User"
 
 
 // Existing User
-const user = new User({ id: 3 });
+// const user = new User({ id: 3 });
 
-user.set({ age: 123 });
-user.set({ name: "Loandie" });
+// user.set({ age: 123 });
+// user.set({ name: "Loandie" });
 
-user.save();
+// user.save();
+
 
 // New User
-const newUser = new User ({ name:"No Id", age: 30 });
-newUser.save();
+// const newUser = new User ({ name:"No Id", age: 30 });
+// newUser.save();
+
+//Event test after extraction
+const userEventTest = new User ({ name: "Bla", age: 0});
+userEventTest.events.on("change", () => {
+    console.log("Bla is 0");
+});
+
+userEventTest.events.trigger("change");

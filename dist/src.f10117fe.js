@@ -1917,7 +1917,45 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Eventing.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Eventing = void 0;
+
+var Eventing = function () {
+  function Eventing() {
+    //Store Events
+    this.events = {};
+  } //Event Listener method -  register an event handler - so other parts of the app know when something changes
+
+
+  Eventing.prototype.on = function (eventName, callback) {
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  }; //Triggers an event to tell other parts of the app something has changed
+
+
+  Eventing.prototype.trigger = function (eventName) {
+    var handlers = this.events[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
+  };
+
+  return Eventing;
+}();
+
+exports.Eventing = Eventing;
+},{}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -1933,11 +1971,12 @@ exports.User = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
+var Eventing_1 = require("./Eventing");
+
 var User = function () {
   function User(Data) {
-    this.Data = Data; //Store Events
-
-    this.events = {};
+    this.Data = Data;
+    this.events = new Eventing_1.Eventing();
   } //Gets a single piece of info about the user (name, age)
 
 
@@ -1949,26 +1988,6 @@ var User = function () {
   User.prototype.set = function (update) {
     //Copy all the values of update and insert into this.Data 
     Object.assign(this.Data, update);
-  }; //Event Listener method -  register an event handler - so other parts of the app know when something changes
-
-
-  User.prototype.on = function (eventName, callback) {
-    var handlers = this.events[eventName] || [];
-    handlers.push(callback);
-    this.events[eventName] = handlers;
-  }; //Triggers an event to tell other parts of the app something has changed
-
-
-  User.prototype.trigger = function (eventName) {
-    var handlers = this.events[eventName];
-
-    if (!handlers || handlers.length === 0) {
-      return;
-    }
-
-    handlers.forEach(function (callback) {
-      callback();
-    });
   }; //Fetch - to fetch some data from the server about a particular user .then
 
 
@@ -1997,7 +2016,7 @@ var User = function () {
 }();
 
 exports.User = User;
-},{"axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js","./Eventing":"src/models/Eventing.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2018,24 +2037,24 @@ var User_1 = require("./models/User"); //Create a new user using Axios
 //     console.log(user);
 // }, 4000)
 // Existing User
+// const user = new User({ id: 3 });
+// user.set({ age: 123 });
+// user.set({ name: "Loandie" });
+// user.save();
+// New User
+// const newUser = new User ({ name:"No Id", age: 30 });
+// newUser.save();
+//Event test after extraction
 
 
-var user = new User_1.User({
-  id: 3
+var userEventTest = new User_1.User({
+  name: "Bla",
+  age: 0
 });
-user.set({
-  age: 123
+userEventTest.events.on("change", function () {
+  console.log("Bla is 0");
 });
-user.set({
-  name: "Loandie"
-});
-user.save(); // New User
-
-var newUser = new User_1.User({
-  name: "No Id",
-  age: 30
-});
-newUser.save();
+userEventTest.events.trigger("change");
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2064,7 +2083,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61273" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57118" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

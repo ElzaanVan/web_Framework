@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { Eventing } from "./Eventing";
 
 interface UserData {
     // Make properties optional by adding?
@@ -7,13 +8,8 @@ interface UserData {
     id?: number;
 }
 
-//Type Alias
-//function that takes no arguments and returns nothing 
-type CallBackFunc = () => void;
-
 export class User {
-    //Store Events
-    events: { [key: string]: CallBackFunc[] } = {};
+    public events: Eventing = new Eventing();
 
     constructor(private Data: UserData){}
 
@@ -25,23 +21,6 @@ export class User {
     set(update: UserData): void {
         //Copy all the values of update and insert into this.Data 
         Object.assign(this.Data, update);
-    }
-    //Event Listener method -  register an event handler - so other parts of the app know when something changes
-    on(eventName: string, callback: CallBackFunc): void {
-       const handlers =  this.events[eventName] || [];
-       handlers.push(callback);
-       this.events[eventName] = handlers;
-    }
-    //Triggers an event to tell other parts of the app something has changed
-    trigger(eventName: string): void {
-        const handlers = this.events[eventName];
-
-        if (!handlers || handlers.length === 0) {
-            return;
-        }
-        handlers.forEach(callback => {
-            callback();
-        });
     }
 
     //Fetch - to fetch some data from the server about a particular user .then
