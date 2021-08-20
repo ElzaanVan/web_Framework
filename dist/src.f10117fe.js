@@ -117,7 +117,45 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
+})({"src/models/Eventing.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Eventing = void 0;
+
+var Eventing = function () {
+  function Eventing() {
+    //Store Events
+    this.events = {};
+  } //Event Listener method -  register an event handler - so other parts of the app know when something changes
+
+
+  Eventing.prototype.on = function (eventName, callback) {
+    var handlers = this.events[eventName] || [];
+    handlers.push(callback);
+    this.events[eventName] = handlers;
+  }; //Triggers an event to tell other parts of the app something has changed
+
+
+  Eventing.prototype.trigger = function (eventName) {
+    var handlers = this.events[eventName];
+
+    if (!handlers || handlers.length === 0) {
+      return;
+    }
+
+    handlers.forEach(function (callback) {
+      callback();
+    });
+  };
+
+  return Eventing;
+}();
+
+exports.Eventing = Eventing;
+},{}],"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -1917,45 +1955,7 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Eventing.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Eventing = void 0;
-
-var Eventing = function () {
-  function Eventing() {
-    //Store Events
-    this.events = {};
-  } //Event Listener method -  register an event handler - so other parts of the app know when something changes
-
-
-  Eventing.prototype.on = function (eventName, callback) {
-    var handlers = this.events[eventName] || [];
-    handlers.push(callback);
-    this.events[eventName] = handlers;
-  }; //Triggers an event to tell other parts of the app something has changed
-
-
-  Eventing.prototype.trigger = function (eventName) {
-    var handlers = this.events[eventName];
-
-    if (!handlers || handlers.length === 0) {
-      return;
-    }
-
-    handlers.forEach(function (callback) {
-      callback();
-    });
-  };
-
-  return Eventing;
-}();
-
-exports.Eventing = Eventing;
-},{}],"src/models/User.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Sync.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -1967,16 +1967,57 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.User = void 0;
+exports.Sync = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
+var Sync = function () {
+  function Sync(rootUrl) {
+    this.rootUrl = rootUrl;
+  }
+
+  ; //Fetch - to fetch some data from the server about a particular user .then
+
+  Sync.prototype.fetch = function (id) {
+    return axios_1.default.get(this.rootUrl + "/" + id);
+  }; //Save - check if user has an ID ? PUT request : POST request
+
+
+  Sync.prototype.save = function (data) {
+    var id = data.id;
+
+    if (id) {
+      // PUT
+      return axios_1.default.put(this.rootUrl + "/" + id, data);
+    } else {
+      // POST
+      return axios_1.default.post(this.rootUrl, data);
+    }
+  };
+
+  return Sync;
+}();
+
+exports.Sync = Sync;
+},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.User = void 0;
+
 var Eventing_1 = require("./Eventing");
+
+var Sync_1 = require("./Sync");
+
+var rootUrl = 'http://localhost:3000/users';
 
 var User = function () {
   function User(Data) {
     this.Data = Data;
     this.events = new Eventing_1.Eventing();
+    this.sync = new Sync_1.Sync(rootUrl);
   } //Gets a single piece of info about the user (name, age)
 
 
@@ -1988,35 +2029,13 @@ var User = function () {
   User.prototype.set = function (update) {
     //Copy all the values of update and insert into this.Data 
     Object.assign(this.Data, update);
-  }; //Fetch - to fetch some data from the server about a particular user .then
-
-
-  User.prototype.fetch = function () {
-    var _this = this;
-
-    axios_1.default.get("http://localhost:3000/users/" + this.get('id')).then(function (response) {
-      _this.set(response.data);
-    });
-  }; //Save - check if user has an ID ? PUT request : POST request
-
-
-  User.prototype.save = function () {
-    var id = this.get('id');
-
-    if (id) {
-      // PUT
-      axios_1.default.put("http://localhost:3000/users/" + id, this.Data);
-    } else {
-      // POST
-      axios_1.default.post('http://localhost:3000/users', this.Data);
-    }
   };
 
   return User;
 }();
 
 exports.User = User;
-},{"axios":"node_modules/axios/index.js","./Eventing":"src/models/Eventing.ts"}],"src/index.ts":[function(require,module,exports) {
+},{"./Eventing":"src/models/Eventing.ts","./Sync":"src/models/Sync.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
