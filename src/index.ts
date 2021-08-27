@@ -45,4 +45,7 @@ import { User } from "./models/User"
 const user = new User({ name: "Popo" });
 user.on("change", () => {
     console.log("Hey the getter works");
-})
+});
+user.trigger("change");
+
+console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function

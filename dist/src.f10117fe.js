@@ -127,29 +127,30 @@ exports.Eventing = void 0;
 
 var Eventing = function () {
   function Eventing() {
-    //Store Events
-    this.events = {};
-  } //Event Listener method -  register an event handler - so other parts of the app know when something changes
+    var _this = this; //Store Events
 
 
-  Eventing.prototype.on = function (eventName, callback) {
-    var handlers = this.events[eventName] || [];
-    handlers.push(callback);
-    this.events[eventName] = handlers;
-  }; //Triggers an event to tell other parts of the app something has changed
+    this.events = {}; //Event Listener method -  register an event handler - so other parts of the app know when something changes
+
+    this.on = function (eventName, callback) {
+      var handlers = _this.events[eventName] || [];
+      handlers.push(callback);
+      _this.events[eventName] = handlers;
+    }; //Triggers an event to tell other parts of the app something has changed
 
 
-  Eventing.prototype.trigger = function (eventName) {
-    var handlers = this.events[eventName];
+    this.trigger = function (eventName) {
+      var handlers = _this.events[eventName];
 
-    if (!handlers || handlers.length === 0) {
-      return;
-    }
+      if (!handlers || handlers.length === 0) {
+        return;
+      }
 
-    handlers.forEach(function (callback) {
-      callback();
-    });
-  };
+      handlers.forEach(function (callback) {
+        callback();
+      });
+    };
+  }
 
   return Eventing;
 }();
@@ -2011,13 +2012,15 @@ exports.Attributes = void 0; // Setting up generic constraint
 
 var Attributes = function () {
   function Attributes(Data) {
-    this.Data = Data;
-  } //Gets a single piece of info about the user (name, age)
+    var _this = this;
 
+    this.Data = Data; //Gets a single piece of info about the user (name, age)
+    //Remember arrow functions are always going to be correctly bound to our instance of attributes we create!
 
-  Attributes.prototype.get = function (key) {
-    return this.Data[key];
-  }; //Changes/updates info about the user
+    this.get = function (key) {
+      return _this.Data[key];
+    };
+  } //Changes/updates info about the user
 
 
   Attributes.prototype.set = function (update) {
@@ -2054,7 +2057,7 @@ var User = function () {
 
   Object.defineProperty(User.prototype, "on", {
     // getter accessor - when you want to access any property of an object
-    // get access to eventing and attributes methods
+    // get access to eventing and attributes Class methods
     get: function get() {
       return this.events.on; //do not call method - make it available on the class User
     },
@@ -2122,6 +2125,8 @@ var user = new User_1.User({
 user.on("change", function () {
   console.log("Hey the getter works");
 });
+user.trigger("change");
+console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

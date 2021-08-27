@@ -20,7 +20,7 @@ export class User {
        this.attributes = new Attributes<UserData>(attrs);
     }
     // getter accessor - when you want to access any property of an object
-    // get access to eventing and attributes methods
+    // get access to eventing and attributes Class methods
     get on(){
         return this.events.on;
         //do not call method - make it available on the class User

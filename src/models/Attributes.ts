@@ -6,7 +6,8 @@ export class Attributes<T> {
     constructor(private Data: T){}
 
     //Gets a single piece of info about the user (name, age)
-    get<K extends keyof T>(key: K): T[K] {
+    //Remember arrow functions are always going to be correctly bound to our instance of attributes we create!
+    get = <K extends keyof T>(key: K): T[K] => {
         return this.Data[key];
     }
     //Changes/updates info about the user
