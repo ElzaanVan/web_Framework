@@ -2085,6 +2085,20 @@ var User = function () {
     this.events.trigger('change');
   };
 
+  User.prototype.fetch = function () {
+    var _this = this;
+
+    var id = this.attributes.get('id');
+
+    if (typeof id !== 'number') {
+      throw new Error("Cannot fetch without an id");
+    }
+
+    this.sync.fetch(id).then(function (response) {
+      _this.set(response.data);
+    });
+  };
+
   return User;
 }();
 
@@ -2127,16 +2141,14 @@ var User_1 = require("./models/User"); //Create a new user using Axios
 
 
 var user = new User_1.User({
-  name: "Popo"
+  id: 1
 });
 user.on("change", function () {
-  console.log("User was changed");
-});
-console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
+  console.log(user);
+}); // console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
+// user.set({ name: "new Name" });
 
-user.set({
-  name: "new Name"
-});
+user.fetch();
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

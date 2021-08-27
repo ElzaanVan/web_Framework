@@ -42,12 +42,13 @@ import { User } from "./models/User"
 
 
 //Accessors -- getter 
-const user = new User({ name: "Popo" });
+const user = new User({ id: 1});
 user.on("change", () => {
-    console.log("User was changed");
+    console.log(user);
 });
 
 
-console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
+// console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
 
-user.set({ name: "new Name" });
+// user.set({ name: "new Name" });
+user.fetch();
