@@ -2020,6 +2020,10 @@ var Attributes = function () {
     this.get = function (key) {
       return _this.Data[key];
     };
+
+    this.getAll = function () {
+      return _this.Data;
+    };
   } //Changes/updates info about the user
 
 
@@ -2091,11 +2095,21 @@ var User = function () {
     var id = this.attributes.get('id');
 
     if (typeof id !== 'number') {
-      throw new Error("Cannot fetch without an id");
+      throw new Error('Cannot fetch without an id');
     }
 
     this.sync.fetch(id).then(function (response) {
       _this.set(response.data);
+    });
+  };
+
+  User.prototype.save = function () {
+    var _this = this;
+
+    this.sync.save(this.attributes.getAll()).then(function (response) {
+      _this.trigger('save');
+    }).catch(function () {
+      _this.trigger('error');
     });
   };
 
@@ -2141,14 +2155,16 @@ var User_1 = require("./models/User"); //Create a new user using Axios
 
 
 var user = new User_1.User({
-  id: 1
+  id: 1,
+  name: "Newer Name",
+  age: 0
 });
-user.on("change", function () {
+user.on('save', function () {
   console.log(user);
 }); // console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
 // user.set({ name: "new Name" });
 
-user.fetch();
+user.save();
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

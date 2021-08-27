@@ -15,5 +15,9 @@ export class Attributes<T> {
         //Copy all the values of update and insert into this.Data 
         Object.assign(this.Data, update);
     }
+
+    getAll = (): T => {
+        return this.Data;
+    }
 }
 
