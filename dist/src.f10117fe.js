@@ -2078,6 +2078,13 @@ var User = function () {
     enumerable: false,
     configurable: true
   });
+
+  User.prototype.set = function (update) {
+    this.attributes.set(update); // trigger change event
+
+    this.events.trigger('change');
+  };
+
   return User;
 }();
 
@@ -2123,10 +2130,13 @@ var user = new User_1.User({
   name: "Popo"
 });
 user.on("change", function () {
-  console.log("Hey the getter works");
+  console.log("User was changed");
 });
-user.trigger("change");
 console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
+
+user.set({
+  name: "new Name"
+});
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

@@ -33,4 +33,10 @@ export class User {
     get get(){
         return this.attributes.get;
     }
+
+    set(update: UserData): void{ 
+        this.attributes.set(update);
+        // trigger change event
+        this.events.trigger('change');
+    }
 }
