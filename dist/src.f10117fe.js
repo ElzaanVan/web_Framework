@@ -2052,6 +2052,29 @@ var User = function () {
     this.attributes = new Attributes_1.Attributes(attrs);
   }
 
+  Object.defineProperty(User.prototype, "on", {
+    // getter accessor - when you want to access any property of an object
+    // get access to eventing and attributes methods
+    get: function get() {
+      return this.events.on; //do not call method - make it available on the class User
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(User.prototype, "trigger", {
+    get: function get() {
+      return this.events.trigger;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(User.prototype, "get", {
+    get: function get() {
+      return this.attributes.get;
+    },
+    enumerable: false,
+    configurable: true
+  });
   return User;
 }();
 
@@ -2085,16 +2108,20 @@ var User_1 = require("./models/User"); //Create a new user using Axios
 // const newUser = new User ({ name:"No Id", age: 30 });
 // newUser.save();
 //Event test after extraction
+// const userEventTest = new User ({ name: "Bla", age: 0});
+// userEventTest.events.on("change", () => {
+//     console.log("Bla is 0");
+// });
+// userEventTest.events.trigger("change");
+//Accessors -- getter 
 
 
-var userEventTest = new User_1.User({
-  name: "Bla",
-  age: 0
+var user = new User_1.User({
+  name: "Popo"
 });
-userEventTest.events.on("change", function () {
-  console.log("Bla is 0");
+user.on("change", function () {
+  console.log("Hey the getter works");
 });
-userEventTest.events.trigger("change");
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2123,7 +2150,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57118" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50824" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

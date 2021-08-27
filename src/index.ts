@@ -33,9 +33,16 @@ import { User } from "./models/User"
 // newUser.save();
 
 //Event test after extraction
-const userEventTest = new User ({ name: "Bla", age: 0});
-userEventTest.events.on("change", () => {
-    console.log("Bla is 0");
-});
+// const userEventTest = new User ({ name: "Bla", age: 0});
+// userEventTest.events.on("change", () => {
+//     console.log("Bla is 0");
+// });
 
-userEventTest.events.trigger("change");
+// userEventTest.events.trigger("change");
+
+
+//Accessors -- getter 
+const user = new User({ name: "Popo" });
+user.on("change", () => {
+    console.log("Hey the getter works");
+})

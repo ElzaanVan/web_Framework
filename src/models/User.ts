@@ -19,5 +19,18 @@ export class User {
     constructor(attrs: UserData) {
        this.attributes = new Attributes<UserData>(attrs);
     }
+    // getter accessor - when you want to access any property of an object
+    // get access to eventing and attributes methods
+    get on(){
+        return this.events.on;
+        //do not call method - make it available on the class User
+    }
 
+    get trigger(){
+        return this.events.trigger;
+    }
+
+    get get(){
+        return this.attributes.get;
+    }
 }
