@@ -22,7 +22,3 @@ export class User extends Model<UserData>{
    }
     
 }
-
-// const user = User.buildUser({id: 50, name: "UserBuild", age: 50});
-
-// console.log(user.get("id"))

@@ -1,5 +1,6 @@
-import axios from "axios";
-import { User } from "./models/User"
+import { Collection } from "./models/collection";
+import { User } from "./models/User";
+
 
 //Create a new user using Axios
 // axios.post("http://localhost:3000/users", {
@@ -57,3 +58,11 @@ import { User } from "./models/User"
 // const user = User.buildUser({id: 50, name: "UserBuild", age: 50});
 // console.log(user.get("id"))
 
+
+//COLLECTION
+const collection = new Collection('http://localhost:3000/users');
+collection.on('change', () => {
+    console.log(collection)
+})
+
+collection.fetch();
