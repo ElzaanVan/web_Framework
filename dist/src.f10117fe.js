@@ -130,13 +130,42 @@ var UserForm = function () {
     this.parent = parent;
   }
 
+  UserForm.prototype.eventsMap = function () {
+    return {
+      'click:button': this.onButtonClick
+    };
+  };
+
+  UserForm.prototype.onButtonClick = function () {
+    console.log("Clicked");
+  };
+
   UserForm.prototype.template = function () {
-    return "\n        <div>\n        <h1>Hello World</h1>\n        <input />\n        </div>\n        ";
+    return "\n        <div>\n        <h1>User Form</h1>\n        <input />\n        <button>Click</button>\n        </div>\n        ";
+  };
+
+  UserForm.prototype.bindEvents = function (fragment) {
+    var eventsMap = this.eventsMap();
+
+    var _loop_1 = function _loop_1(eventKey) {
+      var _a = eventKey.split(':'),
+          eventName = _a[0],
+          selector = _a[1];
+
+      fragment.querySelectorAll(selector).forEach(function (el) {
+        el.addEventListener(eventName, eventsMap[eventKey]);
+      });
+    };
+
+    for (var eventKey in eventsMap) {
+      _loop_1(eventKey);
+    }
   };
 
   UserForm.prototype.render = function () {
     var templateElement = document.createElement('template');
     templateElement.innerHTML = this.template();
+    this.bindEvents(templateElement.content);
     this.parent.append(templateElement.content);
   };
 
