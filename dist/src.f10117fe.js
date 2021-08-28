@@ -127,9 +127,25 @@ exports.UserForm = void 0;
 
 var UserForm = function () {
   function UserForm(parent, model) {
+    var _this = this;
+
     this.parent = parent;
-    this.model = model;
+    this.model = model; //Arrow function for lexical binding to prevent undefined
+
+    this.onsetAgeClick = function () {
+      _this.model.setRandomAge();
+    };
+
+    this.bindModel();
   }
+
+  UserForm.prototype.bindModel = function () {
+    var _this = this;
+
+    this.model.on('change', function () {
+      _this.render();
+    });
+  };
 
   UserForm.prototype.eventsMap = function () {
     return {
@@ -137,12 +153,8 @@ var UserForm = function () {
     };
   };
 
-  UserForm.prototype.onsetAgeClick = function () {
-    console.log("Clicked");
-  };
-
   UserForm.prototype.template = function () {
-    return "\n        <div>\n        <h1>User Form</h1>\n        <p>User name: " + this.model.get('name') + "</p>\n        <p>User age: " + this.model.get('age') + "</p>\n        <input />\n        <button class=\"set-age\">Set random age</button>\n        </div>\n        ";
+    return "\n        <div>\n            <h1>User Form</h1>\n            <p>User name: " + this.model.get('name') + "</p>\n            <p>User age: " + this.model.get('age') + "</p>\n            <input />\n            <button class=\"set-age\">Set random age</button>\n        </div>\n        ";
   };
 
   UserForm.prototype.bindEvents = function (fragment) {
@@ -164,6 +176,7 @@ var UserForm = function () {
   };
 
   UserForm.prototype.render = function () {
+    this.parent.innerHTML = '';
     var templateElement = document.createElement('template');
     templateElement.innerHTML = this.template();
     this.bindEvents(templateElement.content);
@@ -2283,6 +2296,13 @@ var User = function (_super) {
   User.buildUserCollection = function () {
     return new collection_1.Collection(rootUrl, function (json) {
       return User.buildUser(json);
+    });
+  };
+
+  User.prototype.setRandomAge = function () {
+    var age = Math.round(Math.random() * 100);
+    this.set({
+      age: age
     });
   };
 

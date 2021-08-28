@@ -4,7 +4,15 @@ export class UserForm {
     constructor(
         public parent: Element,
         public model: User
-    ) {}
+    ) {
+        this.bindModel();
+    }
+
+    bindModel(): void {
+        this.model.on('change', () => {
+            this.render();
+        });
+    }
 
     eventsMap(): { [key: string]: () => void } {
         return {
@@ -12,18 +20,19 @@ export class UserForm {
         };
     }
 
-    onsetAgeClick(): void {
-        console.log("Clicked");
+    //Arrow function for lexical binding to prevent undefined
+    onsetAgeClick = (): void => {
+        this.model.setRandomAge();
     }
 
     template(): string {
         return `
         <div>
-        <h1>User Form</h1>
-        <p>User name: ${this.model.get('name')}</p>
-        <p>User age: ${this.model.get('age')}</p>
-        <input />
-        <button class="set-age">Set random age</button>
+            <h1>User Form</h1>
+            <p>User name: ${this.model.get('name')}</p>
+            <p>User age: ${this.model.get('age')}</p>
+            <input />
+            <button class="set-age">Set random age</button>
         </div>
         `;
     }
@@ -41,6 +50,7 @@ export class UserForm {
     }
 
     render(): void {
+        this.parent.innerHTML = '';
         const templateElement = document.createElement('template');
         templateElement.innerHTML = this.template();
         this.bindEvents(templateElement.content);
