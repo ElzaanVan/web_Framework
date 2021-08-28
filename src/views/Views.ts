@@ -1,9 +1,9 @@
-import { User } from "../models/User";
-
-export abstract class Views {
+import { Model } from "../models/models";
+// Turn View into a generic class
+export abstract class Views <T extends Model<K>, K>{
     constructor(
         public parent: Element,
-        public model: User
+        public model: T
     ) {
         this.bindModel();
     }

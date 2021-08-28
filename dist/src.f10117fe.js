@@ -123,7 +123,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Views = void 0;
+exports.Views = void 0; // Turn View into a generic class
 
 var Views = function () {
   function Views(parent, model) {
