@@ -141,9 +141,11 @@ var UserForm = function () {
 
       var name = input.value;
 
-      _this.model.set({
-        name: name
-      });
+      if (name !== "") {
+        _this.model.set({
+          name: name
+        });
+      }
     };
 
     this.bindModel();
@@ -165,7 +167,7 @@ var UserForm = function () {
   };
 
   UserForm.prototype.template = function () {
-    return "\n        <div>\n            <h1>User Form</h1>\n            <p>User name: " + this.model.get('name') + "</p>\n            <p>User age: " + this.model.get('age') + "</p>\n            <input />\n            <button class=\"change-name\">Change name</button>\n            <br />\n            <br />\n            <button class=\"set-age\">Set random age</button>\n        </div>\n        ";
+    return "\n        <div>\n            <h1>User Form</h1>\n            <p>User name: " + this.model.get('name') + "</p>\n            <p>User age: " + this.model.get('age') + "</p>\n            <input type=\"text\" required />\n            <button class=\"change-name\">Change name</button>\n            <br />\n            <br />\n            <button class=\"set-age\">Set random age</button>\n        </div>\n        ";
   };
 
   UserForm.prototype.bindEvents = function (fragment) {

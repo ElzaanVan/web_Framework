@@ -30,7 +30,10 @@ export class UserForm {
         const input = this.parent.querySelector('input');
 
         const name = input.value;
-        this.model.set({ name })
+        if (name !== "") {
+            this.model.set({ name })
+        }
+       
     }
 
     template(): string {
@@ -39,7 +42,7 @@ export class UserForm {
             <h1>User Form</h1>
             <p>User name: ${this.model.get('name')}</p>
             <p>User age: ${this.model.get('age')}</p>
-            <input />
+            <input type="text" required />
             <button class="change-name">Change name</button>
             <br />
             <br />
