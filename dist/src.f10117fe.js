@@ -133,16 +133,16 @@ var UserForm = function () {
 
   UserForm.prototype.eventsMap = function () {
     return {
-      'click:button': this.onButtonClick
+      'click:.set-age': this.onsetAgeClick
     };
   };
 
-  UserForm.prototype.onButtonClick = function () {
+  UserForm.prototype.onsetAgeClick = function () {
     console.log("Clicked");
   };
 
   UserForm.prototype.template = function () {
-    return "\n        <div>\n        <h1>User Form</h1>\n        <p>User name: " + this.model.get('name') + "</p>\n        <p>User age: " + this.model.get('age') + "</p>\n        <input />\n        <button>Click</button>\n        </div>\n        ";
+    return "\n        <div>\n        <h1>User Form</h1>\n        <p>User name: " + this.model.get('name') + "</p>\n        <p>User age: " + this.model.get('age') + "</p>\n        <input />\n        <button class=\"set-age\">Set random age</button>\n        </div>\n        ";
   };
 
   UserForm.prototype.bindEvents = function (fragment) {
