@@ -235,18 +235,23 @@ var UserForm = function (_super) {
       }
     };
 
+    _this.onSaveUserClick = function () {
+      _this.model.save();
+    };
+
     return _this;
   }
 
   UserForm.prototype.eventsMap = function () {
     return {
       'click:.set-age': this.onsetAgeClick,
-      'click:.change-name': this.onChangeNameClick
+      'click:.change-name': this.onChangeNameClick,
+      'click:.save-user': this.onSaveUserClick
     };
   };
 
   UserForm.prototype.template = function () {
-    return "\n        <div>\n            <h1>User Form</h1>\n            <p>User name: " + this.model.get('name') + "</p>\n            <p>User age: " + this.model.get('age') + "</p>\n            <input type=\"text\" required />\n            <button class=\"change-name\">Change name</button>\n            <br />\n            <br />\n            <button class=\"set-age\">Set random age</button>\n        </div>\n        ";
+    return "\n        <div>\n            <input type=\"text\" placeholder=\"" + this.model.get('name') + "\" required />\n            <button class=\"change-name\">Change name</button>\n            <br />\n            <br />\n            <button class=\"set-age\">Set random age</button>\n            <button class=\"save-user\">Save</button>\n        </div>\n        ";
   };
 
   return UserForm;
