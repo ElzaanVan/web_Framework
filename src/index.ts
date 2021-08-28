@@ -1,4 +1,3 @@
-import { Collection } from "./models/collection";
 import { User, UserData } from "./models/User";
 
 
@@ -60,10 +59,7 @@ import { User, UserData } from "./models/User";
 
 
 //COLLECTION
-const collection = new Collection<User, UserData>(
-    'http://localhost:3000/users',
-    (json: UserData) => User.buildUser(json)
-);
+const collection = User.buildUserCollection();
 collection.on('change', () => {
     console.log(collection)
 })
