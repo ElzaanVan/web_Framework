@@ -8,7 +8,7 @@ export abstract class Views {
         this.bindModel();
     }
 
-    abstract eventsMap(): { [key: string]: () => {} }
+    abstract eventsMap(): { [key: string]: () => void }
     abstract template(): string;
 
     bindModel(): void {
