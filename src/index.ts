@@ -1,5 +1,5 @@
 import { Collection } from "./models/collection";
-import { User } from "./models/User";
+import { User, UserData } from "./models/User";
 
 
 //Create a new user using Axios
@@ -60,7 +60,10 @@ import { User } from "./models/User";
 
 
 //COLLECTION
-const collection = new Collection('http://localhost:3000/users');
+const collection = new Collection<User, UserData>(
+    'http://localhost:3000/users',
+    (json: UserData) => User.buildUser(json)
+);
 collection.on('change', () => {
     console.log(collection)
 })
