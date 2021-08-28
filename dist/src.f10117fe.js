@@ -117,7 +117,41 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/views/Views.ts":[function(require,module,exports) {
+})({"src/views/CollectionViews.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CollectionViews = void 0;
+
+var CollectionViews = function () {
+  function CollectionViews(parent, collection) {
+    this.parent = parent;
+    this.collection = collection;
+  }
+
+  ;
+
+  CollectionViews.prototype.render = function () {
+    this.parent.innerHTML = "";
+    var templateElement = document.createElement('template');
+
+    for (var _i = 0, _a = this.collection.models; _i < _a.length; _i++) {
+      var model = _a[_i];
+      var itemParent = document.createElement('div');
+      this.renderItem(model, itemParent);
+      templateElement.content.append(itemParent);
+    }
+
+    this.parent.append(templateElement.content);
+  };
+
+  return CollectionViews;
+}();
+
+exports.CollectionViews = CollectionViews;
+},{}],"src/views/Views.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -196,95 +230,7 @@ var Views = function () {
 }();
 
 exports.Views = Views;
-},{}],"src/views/UserForm.ts":[function(require,module,exports) {
-"use strict";
-
-var __extends = this && this.__extends || function () {
-  var _extendStatics = function extendStatics(d, b) {
-    _extendStatics = Object.setPrototypeOf || {
-      __proto__: []
-    } instanceof Array && function (d, b) {
-      d.__proto__ = b;
-    } || function (d, b) {
-      for (var p in b) {
-        if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
-      }
-    };
-
-    return _extendStatics(d, b);
-  };
-
-  return function (d, b) {
-    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-
-    _extendStatics(d, b);
-
-    function __() {
-      this.constructor = d;
-    }
-
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-  };
-}();
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.UserForm = void 0;
-
-var Views_1 = require("./Views");
-
-var UserForm = function (_super) {
-  __extends(UserForm, _super);
-
-  function UserForm() {
-    var _this = _super !== null && _super.apply(this, arguments) || this; //Arrow function for lexical binding to prevent undefined
-
-
-    _this.onsetAgeClick = function () {
-      _this.model.setRandomAge();
-    };
-
-    _this.onChangeNameClick = function () {
-      var input = _this.parent.querySelector('input');
-
-      var name = input.value;
-
-      if (name === "") {
-        alert("Please enter name");
-      }
-
-      if (name !== "") {
-        _this.model.set({
-          name: name
-        });
-      }
-    };
-
-    _this.onSaveUserClick = function () {
-      _this.model.save();
-    };
-
-    return _this;
-  }
-
-  UserForm.prototype.eventsMap = function () {
-    return {
-      'click:.set-age': this.onsetAgeClick,
-      'click:.change-name': this.onChangeNameClick,
-      'click:.save-user': this.onSaveUserClick
-    };
-  };
-
-  UserForm.prototype.template = function () {
-    return "\n        <div>\n            <input type=\"text\" placeholder=\"" + this.model.get('name') + "\" required />\n            <button class=\"change-name\">Change name</button>\n            <br />\n            <br />\n            <button class=\"set-age\">Set random age</button>\n            <button class=\"save-user\">Save</button>\n        </div>\n        ";
-  };
-
-  return UserForm;
-}(Views_1.Views);
-
-exports.UserForm = UserForm;
-},{"./Views":"src/views/Views.ts"}],"src/views/UserShow.ts":[function(require,module,exports) {
+},{}],"src/views/UserShow.ts":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -337,7 +283,7 @@ var UserShow = function (_super) {
 }(Views_1.Views);
 
 exports.UserShow = UserShow;
-},{"./Views":"src/views/Views.ts"}],"src/views/UserEdit.ts":[function(require,module,exports) {
+},{"./Views":"src/views/Views.ts"}],"src/views/UserList.ts":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -371,149 +317,28 @@ var __extends = this && this.__extends || function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UserEdit = void 0;
+exports.UserList = void 0;
 
-var Views_1 = require("./Views");
-
-var UserForm_1 = require("./UserForm");
+var CollectionViews_1 = require("./CollectionViews");
 
 var UserShow_1 = require("./UserShow");
 
-var UserEdit = function (_super) {
-  __extends(UserEdit, _super);
+var UserList = function (_super) {
+  __extends(UserList, _super);
 
-  function UserEdit() {
+  function UserList() {
     return _super !== null && _super.apply(this, arguments) || this;
   }
 
-  UserEdit.prototype.regionsMap = function () {
-    return {
-      userShow: ".user-show",
-      userForm: ".user-form"
-    };
+  UserList.prototype.renderItem = function (model, itemParent) {
+    new UserShow_1.UserShow(itemParent, model).render();
   };
 
-  UserEdit.prototype.onRender = function () {
-    new UserShow_1.UserShow(this.regions.userShow, this.model).render();
-    new UserForm_1.UserForm(this.regions.userForm, this.model).render();
-  };
+  return UserList;
+}(CollectionViews_1.CollectionViews);
 
-  UserEdit.prototype.template = function () {
-    return "\n        <div>\n            <div class=\"user-show\"></div>\n            <div class=\"user-form\"></div>\n        </div> \n        ";
-  };
-
-  return UserEdit;
-}(Views_1.Views);
-
-exports.UserEdit = UserEdit;
-},{"./Views":"src/views/Views.ts","./UserForm":"src/views/UserForm.ts","./UserShow":"src/views/UserShow.ts"}],"src/models/models.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Model = void 0; // Create constructor function thats going to take an instance of something that satisfies model attributes, sync and Events
-
-var Model = function () {
-  function Model(attributes, events, sync) {
-    this.attributes = attributes;
-    this.events = events;
-    this.sync = sync;
-  }
-
-  Object.defineProperty(Model.prototype, "on", {
-    get: function get() {
-      return this.events.on; //do not call method - make it available on the class User
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Model.prototype, "trigger", {
-    get: function get() {
-      return this.events.trigger;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  Object.defineProperty(Model.prototype, "get", {
-    get: function get() {
-      return this.attributes.get;
-    },
-    enumerable: false,
-    configurable: true
-  });
-
-  Model.prototype.set = function (update) {
-    this.attributes.set(update); // trigger change event
-
-    this.events.trigger('change');
-  };
-
-  Model.prototype.fetch = function () {
-    var _this = this;
-
-    var id = this.attributes.get('id');
-
-    if (typeof id !== 'number') {
-      throw new Error('Cannot fetch without an id');
-    }
-
-    this.sync.fetch(id).then(function (response) {
-      _this.set(response.data);
-    });
-  };
-
-  Model.prototype.save = function () {
-    var _this = this;
-
-    this.sync.save(this.attributes.getAll()).then(function (response) {
-      _this.trigger('save');
-    }).catch(function () {
-      _this.trigger('error');
-    });
-  };
-
-  return Model;
-}();
-
-exports.Model = Model;
-},{}],"src/models/Attributes.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Attributes = void 0; // Setting up generic constraint
-// Limiting the different type that we pass in as an argument
-// Then we are looking up the given key on the interface T to understand what type of value we are returning
-
-var Attributes = function () {
-  function Attributes(Data) {
-    var _this = this;
-
-    this.Data = Data; //Gets a single piece of info about the user (name, age)
-    //Remember arrow functions are always going to be correctly bound to our instance of attributes we create!
-
-    this.get = function (key) {
-      return _this.Data[key];
-    };
-
-    this.getAll = function () {
-      return _this.Data;
-    };
-  } //Changes/updates info about the user
-
-
-  Attributes.prototype.set = function (update) {
-    //Copy all the values of update and insert into this.Data 
-    Object.assign(this.Data, update);
-  };
-
-  return Attributes;
-}();
-
-exports.Attributes = Attributes;
-},{}],"src/models/Eventing.ts":[function(require,module,exports) {
+exports.UserList = UserList;
+},{"./CollectionViews":"src/views/CollectionViews.ts","./UserShow":"src/views/UserShow.ts"}],"src/models/Eventing.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2352,51 +2177,7 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/ApiSync.ts":[function(require,module,exports) {
-"use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.ApiSync = void 0;
-
-var axios_1 = __importDefault(require("axios"));
-
-var ApiSync = function () {
-  function ApiSync(rootUrl) {
-    this.rootUrl = rootUrl;
-  }
-
-  ; //Fetch - to fetch some data from the server about a particular user .then
-
-  ApiSync.prototype.fetch = function (id) {
-    return axios_1.default.get(this.rootUrl + "/" + id);
-  }; //Save - check if user has an ID ? PUT request : POST request
-
-
-  ApiSync.prototype.save = function (data) {
-    var id = data.id;
-
-    if (id) {
-      // PUT
-      return axios_1.default.put(this.rootUrl + "/" + id, data);
-    } else {
-      // POST
-      return axios_1.default.post(this.rootUrl, data);
-    }
-  };
-
-  return ApiSync;
-}();
-
-exports.ApiSync = ApiSync;
-},{"axios":"node_modules/axios/index.js"}],"src/models/collection.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/collection.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -2453,7 +2234,158 @@ var Collection = function () {
 }();
 
 exports.Collection = Collection;
-},{"./Eventing":"src/models/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"./Eventing":"src/models/Eventing.ts","axios":"node_modules/axios/index.js"}],"src/models/models.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Model = void 0; // Create constructor function thats going to take an instance of something that satisfies model attributes, sync and Events
+
+var Model = function () {
+  function Model(attributes, events, sync) {
+    this.attributes = attributes;
+    this.events = events;
+    this.sync = sync;
+  }
+
+  Object.defineProperty(Model.prototype, "on", {
+    get: function get() {
+      return this.events.on; //do not call method - make it available on the class User
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Model.prototype, "trigger", {
+    get: function get() {
+      return this.events.trigger;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Object.defineProperty(Model.prototype, "get", {
+    get: function get() {
+      return this.attributes.get;
+    },
+    enumerable: false,
+    configurable: true
+  });
+
+  Model.prototype.set = function (update) {
+    this.attributes.set(update); // trigger change event
+
+    this.events.trigger('change');
+  };
+
+  Model.prototype.fetch = function () {
+    var _this = this;
+
+    var id = this.attributes.get('id');
+
+    if (typeof id !== 'number') {
+      throw new Error('Cannot fetch without an id');
+    }
+
+    this.sync.fetch(id).then(function (response) {
+      _this.set(response.data);
+    });
+  };
+
+  Model.prototype.save = function () {
+    var _this = this;
+
+    this.sync.save(this.attributes.getAll()).then(function (response) {
+      _this.trigger('save');
+    }).catch(function () {
+      _this.trigger('error');
+    });
+  };
+
+  return Model;
+}();
+
+exports.Model = Model;
+},{}],"src/models/Attributes.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Attributes = void 0; // Setting up generic constraint
+// Limiting the different type that we pass in as an argument
+// Then we are looking up the given key on the interface T to understand what type of value we are returning
+
+var Attributes = function () {
+  function Attributes(Data) {
+    var _this = this;
+
+    this.Data = Data; //Gets a single piece of info about the user (name, age)
+    //Remember arrow functions are always going to be correctly bound to our instance of attributes we create!
+
+    this.get = function (key) {
+      return _this.Data[key];
+    };
+
+    this.getAll = function () {
+      return _this.Data;
+    };
+  } //Changes/updates info about the user
+
+
+  Attributes.prototype.set = function (update) {
+    //Copy all the values of update and insert into this.Data 
+    Object.assign(this.Data, update);
+  };
+
+  return Attributes;
+}();
+
+exports.Attributes = Attributes;
+},{}],"src/models/ApiSync.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ApiSync = void 0;
+
+var axios_1 = __importDefault(require("axios"));
+
+var ApiSync = function () {
+  function ApiSync(rootUrl) {
+    this.rootUrl = rootUrl;
+  }
+
+  ; //Fetch - to fetch some data from the server about a particular user .then
+
+  ApiSync.prototype.fetch = function (id) {
+    return axios_1.default.get(this.rootUrl + "/" + id);
+  }; //Save - check if user has an ID ? PUT request : POST request
+
+
+  ApiSync.prototype.save = function (data) {
+    var id = data.id;
+
+    if (id) {
+      // PUT
+      return axios_1.default.put(this.rootUrl + "/" + id, data);
+    } else {
+      // POST
+      return axios_1.default.post(this.rootUrl, data);
+    }
+  };
+
+  return ApiSync;
+}();
+
+exports.ApiSync = ApiSync;
+},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -2530,31 +2462,41 @@ var User = function (_super) {
 
 exports.User = User;
 },{"./models":"src/models/models.ts","./Attributes":"src/models/Attributes.ts","./Eventing":"src/models/Eventing.ts","./ApiSync":"src/models/ApiSync.ts","./collection":"src/models/collection.ts"}],"src/index.ts":[function(require,module,exports) {
-"use strict";
+"use strict"; // import { UserEdit } from "./views/UserEdit";
+// import { User } from './models/User';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
+}); // // Rendering Userform in HTML
+// const user = User.buildUser({ name: "Denti",  age: 8 });
+// const root = document.getElementById('root');
+// if (root) {
+//     const userEdit = new UserEdit(root, user);
+//     userEdit.render();
+//     console.log(userEdit)
+// }else {
+//     alert ("error");
+// }
+// Collection View
+
+var UserList_1 = require("./views/UserList");
+
+var collection_1 = require("./models/collection");
+
+var User_1 = require("./models/User");
+
+var users = new collection_1.Collection('http://localhost:3000/users', function (json) {
+  return User_1.User.buildUser(json);
 });
+users.on('change', function () {
+  var root = document.getElementById('root');
 
-var UserEdit_1 = require("./views/UserEdit");
-
-var User_1 = require("./models/User"); // Rendering Userform in HTML
-
-
-var user = User_1.User.buildUser({
-  name: "Denti",
-  age: 8
+  if (root) {
+    new UserList_1.UserList(root, users).render();
+  }
 });
-var root = document.getElementById('root');
-
-if (root) {
-  var userEdit = new UserEdit_1.UserEdit(root, user);
-  userEdit.render();
-  console.log(userEdit);
-} else {
-  alert("error");
-}
-},{"./views/UserEdit":"src/views/UserEdit.ts","./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+users.fetch();
+},{"./views/UserList":"src/views/UserList.ts","./models/collection":"src/models/collection.ts","./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
