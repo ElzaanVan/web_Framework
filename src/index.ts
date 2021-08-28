@@ -42,13 +42,18 @@ import { User } from "./models/User"
 
 
 //Accessors -- getter 
-const user = new User({ id: 1, name: "Newer Name", age: 0});
-user.on('save', () => {
-    console.log(user);
-});
+// const user = new User({ id: 1, name: "Newer Name", age: 0});
+// user.on('save', () => {
+//     console.log(user);
+// });
 
 
 // console.log(user.get("name")); /// throws error --- because of `this` in JS (get in attributes does not have user -- going to return undefined//error) - use bound function
 
 // user.set({ name: "new Name" });
-user.save();
+// user.save();
+
+//User Extends Model
+// const user = User.buildUser({id: 50, name: "UserBuild", age: 50});
+// console.log(user.get("id"))
+

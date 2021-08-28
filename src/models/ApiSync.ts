@@ -4,7 +4,7 @@ interface hasId {
     id?: number
 }
 
-export class Sync<T extends hasId>{
+export class ApiSync<T extends hasId>{
     constructor(public rootUrl: string) {};
 
         //Fetch - to fetch some data from the server about a particular user .then
